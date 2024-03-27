@@ -63,6 +63,6 @@ private:
 template <Elementable Element>
 Matrix<Element> operator*(const auto& number, const Matrix<Element>& matrix);
 
-#include "Matrix-tmp.h"
+#include "matrix-tmp.h"
 
 #endif

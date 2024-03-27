@@ -3,7 +3,7 @@
 
 #include <format>
 
-#include "Matrix.h"
+#include "matrix.h"
 
 template <Elementable Element>
 Matrix<Element>::Matrix()
