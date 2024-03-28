@@ -8,4 +8,7 @@ add_executable(Matrix main.cpp
         Matrix.h
         concept.h
         Matrix-tmp.h
+        Polynomial.h
+        Polynomial.cpp
+        Polynomial-inl.h
 )
