@@ -317,4 +317,20 @@ std::ostream& operator<<(std::ostream& os, const Matrix<Element>& matrix)
 	return os;
 }
 
+template <Elementable Element>
+Polynomial<Element>::PolynomialRoot Matrix<Element>::eigenvalues() const
+{
+//	|A - /I| = 0
+	if(row != col)
+		throw std::invalid_argument("Matrix<Element>::determinant: column and row must be equal");
+
+	Polynomial<Element> lambda({1,0});
+	Matrix<Polynomial<Element>> i_matrix(row, col);
+	for (int i = 0; i < row; ++i)
+		i_matrix[i][i] = lambda;
+	Matrix<Polynomial<Element>> a = this - i_matrix;
+
+	return a.determinant().solve();
+}
+
 #endif

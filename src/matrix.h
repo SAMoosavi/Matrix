@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "concept.h"
+#include "polynomial.h"
 
 template <Elementable Element>
 class Matrix
@@ -67,6 +68,8 @@ public:
 
 	[[nodiscard]] inline std::string to_string() const noexcept;
 	[[nodiscard]] inline operator std::string() const noexcept;
+
+	Polynomial<Element>::PolynomialRoot eigenvalues() const;
 
 private:
 	RowType& operator[](size_t idx);
