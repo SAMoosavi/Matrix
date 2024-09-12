@@ -107,6 +107,19 @@ TEST_F(MatrixFunctionality, TheDeterminantFunctionSuoldBeTrowWhenTheMatrixIsNotS
 	EXPECT_THROW(MATRIX.determinant(), std::invalid_argument);
 }
 
+TEST_F(MatrixFunctionality, TheEigenvaluesFunctionSuoldBeTrowWhenTheMatrixIsNotSqurt)
+{
+	constexpr size_t ROW_NUMBER = 1;
+	constexpr size_t COL_NUMBER = 2;
+	const Matrix<int> MATRIX(ROW_NUMBER, COL_NUMBER);
+	EXPECT_THROW(MATRIX.eigenvalues(), std::invalid_argument);
+}
+TEST_F(MatrixFunctionality, TheEigenvaluesFunctionSuoldReturnEigenvaluesNumberOfMatrix)
+{
+	const Matrix<double> MATRIX({{-26, -33, -25}, {31, 42, 23}, {-11, -15, -4}});
+	EXPECT_THAT(MATRIX.eigenvalues(), ElementsAre(-6, 3, 15));
+}
+
 using BaineryOperatorType = std::tuple<Matrix<int>, Matrix<int>, Matrix<int>>;
 
 class SumOfTwoMatrix : public ::testing::TestWithParam<BaineryOperatorType>
