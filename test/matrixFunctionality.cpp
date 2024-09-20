@@ -111,13 +111,33 @@ TEST_F(MatrixFunctionality, TheEigenvaluesFunctionSuoldBeTrowWhenTheMatrixIsNotS
 {
 	constexpr size_t ROW_NUMBER = 1;
 	constexpr size_t COL_NUMBER = 2;
-	const Matrix<int> MATRIX(ROW_NUMBER, COL_NUMBER);
+	const Matrix<double> MATRIX(ROW_NUMBER, COL_NUMBER);
 	EXPECT_THROW(MATRIX.eigenvalues(), std::invalid_argument);
 }
+
 TEST_F(MatrixFunctionality, TheEigenvaluesFunctionSuoldReturnEigenvaluesNumberOfMatrix)
 {
 	const Matrix<double> MATRIX({{-26, -33, -25}, {31, 42, 23}, {-11, -15, -4}});
 	EXPECT_THAT(MATRIX.eigenvalues(), ElementsAre(-6, 3, 15));
+}
+
+TEST_F(MatrixFunctionality, TheEigenvectorFunctionSuoldBeTrowWhenTheMatrixIsNotSqurt)
+{
+	constexpr size_t ROW_NUMBER = 1;
+	constexpr size_t COL_NUMBER = 2;
+	const Matrix<double> MATRIX(ROW_NUMBER, COL_NUMBER);
+	EXPECT_THROW(MATRIX.eigenvector(), std::invalid_argument);
+}
+
+TEST_F(MatrixFunctionality, TheEigenvectorFunctionSuoldReturnEigenvectorNumberOfMatrix)
+{
+	const Matrix<double> matrix({{-26, -33, -25}, {31, 42, 23}, {-11, -15, -4}});
+	const std::vector<std::vector<double>> ans =  {{7, -5, 1}, {-2, 1, 1}, {1, -2, 1}};
+	const std::vector<std::vector<double>> eigenvector = matrix.eigenvector();
+
+	for (int i =0; i < 3; ++i)
+		for (int j =0; j < 3; ++j)
+			EXPECT_THAT(eigenvector[i][j], DoubleEq(ans[i][j]));
 }
 
 using BaineryOperatorType = std::tuple<Matrix<int>, Matrix<int>, Matrix<int>>;

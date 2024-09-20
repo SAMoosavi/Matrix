@@ -60,7 +60,7 @@ public:
 	template <typename OtherElement>
 	bool operator==(const Matrix<OtherElement>& other) const;
 
-	Element at(size_t row_index, size_t col_index);
+	Element& at(size_t row_index, size_t col_index);
 
 	RowType operator[](size_t idx) const;
 
@@ -69,7 +69,9 @@ public:
 	[[nodiscard]] inline std::string to_string() const noexcept;
 	[[nodiscard]] inline operator std::string() const noexcept;
 
-	Polynomial<Element>::PolynomialRoot eigenvalues() const;
+	std::vector<Element> eigenvalues() const;
+
+	std::vector<std::vector<Element>> eigenvector() const;
 
 private:
 	RowType& operator[](size_t idx);

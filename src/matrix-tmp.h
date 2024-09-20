@@ -7,7 +7,7 @@ template <Elementable Element>
 Matrix<Element>::Matrix(size_t row, size_t col)
 : row(row)
 , col(col)
-, table(row, RowType(col, 0))
+, table(row, RowType(col, Element()))
 {
 }
 
@@ -182,7 +182,7 @@ Matrix<Element>::RowType& Matrix<Element>::operator[](size_t idx)
 }
 
 template <Elementable Element>
-Element Matrix<Element>::at(size_t row_index, size_t col_index)
+Element& Matrix<Element>::at(size_t row_index, size_t col_index)
 {
 	return table[row_index][col_index];
 }
@@ -200,14 +200,14 @@ Element Matrix<Element>::determinant() const
 		size_t swap_row_index = col_index;
 		Element base_of_column = tmp_table[swap_row_index][col_index];
 		//		TODO: create concept for check exit Element == 0
-		while (base_of_column == 0 and swap_row_index < row)
+		while (base_of_column == Element() and swap_row_index < row)
 		{
 			base_of_column = tmp_table[swap_row_index][col_index];
 			++swap_row_index;
 		}
 
-		if (base_of_column == 0)
-			return 0;
+		if (base_of_column == Element())
+			return Element();
 		else if (swap_row_index != col_index)
 		{
 			std::swap(tmp_table[swap_row_index - 1], tmp_table[col_index]);
@@ -216,7 +216,7 @@ Element Matrix<Element>::determinant() const
 
 		for (size_t row_index = col_index + 1; row_index < row; row_index++)
 		{
-			if (tmp_table[row_index][col_index] == 0)
+			if (tmp_table[row_index][col_index] == Element())
 				continue;
 
 			Element ratio = tmp_table[row_index][col_index] / base_of_column;
@@ -225,7 +225,7 @@ Element Matrix<Element>::determinant() const
 		}
 	}
 
-	Element det = 1;
+	Element det = Element(1);
 	for (size_t i = 0; i < row; i++)
 		det *= tmp_table[i][i];
 
@@ -318,19 +318,25 @@ std::ostream& operator<<(std::ostream& os, const Matrix<Element>& matrix)
 }
 
 template <Elementable Element>
-Polynomial<Element>::PolynomialRoot Matrix<Element>::eigenvalues() const
+std::vector<Element> Matrix<Element>::eigenvalues() const
 {
-//	|A - /I| = 0
 	if(row != col)
 		throw std::invalid_argument("Matrix<Element>::determinant: column and row must be equal");
 
 	Polynomial<Element> lambda({1,0});
 	Matrix<Polynomial<Element>> i_matrix(row, col);
 	for (int i = 0; i < row; ++i)
-		i_matrix[i][i] = lambda;
-	Matrix<Polynomial<Element>> a = this - i_matrix;
+		i_matrix.at(i, i) = lambda;
+	Matrix<Polynomial<Element>> a = -i_matrix + *this;
 
 	return a.determinant().solve();
+}
+
+
+template <Elementable Element>
+std::vector<std::vector<Element>> Matrix<Element>::eigenvector() const
+{
+	return std::vector<std::vector<Element>>();
 }
 
 #endif
