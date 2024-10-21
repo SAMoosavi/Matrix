@@ -7,7 +7,7 @@
 
 #include "concept.h"
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 class Matrix
 {
 private:
@@ -79,7 +79,7 @@ private:
 	TableType table;
 };
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 std::ostream& operator<<(std::ostream& os, const Matrix<Element>& matrix);
 
 template <typename Element, typename OtherElement>

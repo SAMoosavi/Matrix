@@ -32,6 +32,16 @@ Int create_random_number(Int begin, Int end) noexcept
 	return distribution(gen);
 }
 
+template <typename Float>
+	requires std::floating_point<Float>
+constexpr bool compare_with_precision(Float number1, Float number2, uint16_t precision) noexcept
+{
+	Float diff = std::abs(number1 - number2);
+	Float epsilon = std::pow(10, -precision);
+
+	return diff < epsilon;
+}
+
 }		 // namespace polynomial_helper
 
 #endif

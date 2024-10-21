@@ -1,10 +1,13 @@
 #ifndef MATRIX_CONCEPT_H
 #define MATRIX_CONCEPT_H
 
+#include <concepts>
+
 #include <iostream>
 #include <ranges>
-#include <vector>
 #include <string>
+#include <type_traits>
+#include <vector>
 
 template <typename T>
 concept Multiplicationable = requires(T t) {
@@ -44,6 +47,40 @@ template <typename T, typename U>
 concept MultiplableDifferentType = requires(T, U) {
 	requires MultiplableDifferentTypeReturnSecondType<T, U> or MultiplableDifferentTypeReturnFirstType<T, U> or
 			MultipleAssignableDifferentType<T, U>;
+};
+
+template <typename T>
+concept Divisionable = requires(T t) {
+	{
+		t* t
+	} -> std::same_as<T>;
+};
+
+template <typename T, typename U>
+concept DivisionAssignableDifferentType = requires(T t, U u) {
+	{
+		t /= u
+	} -> std::same_as<T&>;
+};
+
+template <typename T, typename U>
+concept DivisionableDifferentTypeReturnFirstType = requires(T t, U u) {
+	{
+		t/ u
+	} -> std::same_as<T>;
+};
+
+template <typename T, typename U>
+concept DivisionableDifferentTypeReturnSecondType = requires(T t, U u) {
+	{
+		u/ t
+	} -> std::same_as<T>;
+};
+
+template <typename T, typename U>
+concept DivisionableDifferentType = requires(T, U) {
+	requires DivisionableDifferentTypeReturnSecondType<T, U> or DivisionableDifferentTypeReturnFirstType<T, U> or
+			DivisionAssignableDifferentType<T, U>;
 };
 
 template <typename T>
@@ -109,9 +146,17 @@ concept Containerable = requires(Container c, Element e) {
 template <typename Element>
 concept Elementable = requires(Element e) {
 	requires Multiplicationable<Element>;
+	requires Divisionable<Element>;
 	requires Sumable<Element>;
 	requires Symmetryable<Element>;
-	{ std::to_string(e) } -> std::same_as<std::string>;
+};
+
+template <typename Element>
+concept IsMatrixableElement = requires(Element e) {
+	requires Elementable<Element>;
+	{
+		std::to_string(e)
+	} -> std::same_as<std::string>;
 };
 
 template <typename Matrix>

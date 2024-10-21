@@ -20,18 +20,6 @@
             }
         }
     },
-    "inline_as_cpp": {
-        "default": "yes",
-        "description": "build inl as cpp",
-        "choices": {
-            "yes": {
-                "short": "inl"
-            },
-            "no": {
-                "short": "inl as cpp"
-            }
-        }
-    },
     "use_ccache": {
         "default": "yes",
         "description": "Use ccache",

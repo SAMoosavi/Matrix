@@ -7,7 +7,7 @@
 
 #include "matrix.h"
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element>::Matrix(size_t row, size_t col)
 : number_of_row(row)
 , number_of_col(col)
@@ -15,7 +15,7 @@ Matrix<Element>::Matrix(size_t row, size_t col)
 {
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <template <Containerable> typename Container>
 Matrix<Element>::Matrix(const Container<Container<Element>>& matrix)
 : number_of_row(matrix.size())
@@ -31,7 +31,7 @@ Matrix<Element>::Matrix(const Container<Container<Element>>& matrix)
 	}
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element>::Matrix(const std::initializer_list<std::initializer_list<Element>>& matrix)
 : number_of_row(matrix.size())
 , number_of_col(matrix.begin()->size())
@@ -46,7 +46,7 @@ Matrix<Element>::Matrix(const std::initializer_list<std::initializer_list<Elemen
 	}
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 	requires SumableDifferentType<Element, OtherElement>
 Matrix<Element> Matrix<Element>::sum(const Matrix<OtherElement>& other) const
@@ -62,14 +62,14 @@ Matrix<Element> Matrix<Element>::sum(const Matrix<OtherElement>& other) const
 	return result;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 Matrix<Element> Matrix<Element>::operator+(const Matrix<OtherElement>& other) const
 {
 	return sum(std::move(other));
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 Matrix<Element>& Matrix<Element>::operator+=(const Matrix<OtherElement>& other)
 {
@@ -77,7 +77,7 @@ Matrix<Element>& Matrix<Element>::operator+=(const Matrix<OtherElement>& other)
 	return *this;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element> Matrix<Element>::operator-() const
 {
 	Matrix tmp(*this);
@@ -89,21 +89,21 @@ Matrix<Element> Matrix<Element>::operator-() const
 	return tmp;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 Matrix<Element> Matrix<Element>::submission(const Matrix<OtherElement>& other) const
 {
 	return sum(-other);
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 Matrix<Element> Matrix<Element>::operator-(const Matrix<OtherElement>& other) const
 {
 	return submission(other);
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 Matrix<Element>& Matrix<Element>::operator-=(const Matrix<OtherElement>& other)
 {
@@ -111,7 +111,7 @@ Matrix<Element>& Matrix<Element>::operator-=(const Matrix<OtherElement>& other)
 	return *this;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 	requires MultiplableDifferentTypeReturnFirstType<Element, OtherElement>
 Matrix<Element> Matrix<Element>::multiple(const Matrix<OtherElement>& other) const
@@ -129,7 +129,7 @@ Matrix<Element> Matrix<Element>::multiple(const Matrix<OtherElement>& other) con
 	return result;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 	requires(not IsMatrixable<OtherElement>) and MultiplableDifferentType<Element, OtherElement>
 Matrix<Element> Matrix<Element>::multiple(const OtherElement& other) const
@@ -150,14 +150,14 @@ Matrix<Element> Matrix<Element>::multiple(const OtherElement& other) const
 	return result;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 Matrix<Element> Matrix<Element>::operator*(const OtherElement& other) const
 {
 	return multiple(std::move(other));
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 Matrix<Element>& Matrix<Element>::operator*=(const OtherElement& other)
 {
@@ -173,25 +173,25 @@ Matrix<Element> operator*(const OtherElement& number, const Matrix<Element>& mat
 	return std::move(matrix * number);
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element>::RowType Matrix<Element>::operator[](size_t idx) const
 {
 	return table[idx];
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element>::RowType& Matrix<Element>::operator[](size_t idx)
 {
 	return table[idx];
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Element Matrix<Element>::at(size_t row_index, size_t col_index)
 {
 	return table[row_index][col_index];
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Element Matrix<Element>::determinant() const
 {
 	if (number_of_col != number_of_row)
@@ -239,25 +239,25 @@ Element Matrix<Element>::determinant() const
 		return -det;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 auto Matrix<Element>::get_table() const -> TableType
 {
 	return table;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 size_t Matrix<Element>::get_number_of_row() const
 {
 	return number_of_row;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 size_t Matrix<Element>::get_number_of_col() const
 {
 	return number_of_col;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 template <typename OtherElement>
 bool Matrix<Element>::operator==(const Matrix<OtherElement>& other) const
 {
@@ -276,7 +276,7 @@ bool Matrix<Element>::operator==(const Matrix<OtherElement>& other) const
 	return true;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 std::string Matrix<Element>::to_string() const noexcept
 {
 	const std::string NEW_LINE = "\n";
@@ -308,20 +308,20 @@ std::string Matrix<Element>::to_string() const noexcept
 	return result;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element>::operator std::string() const noexcept
 {
 	return to_string();
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 std::ostream& operator<<(std::ostream& os, const Matrix<Element>& matrix)
 {
 	os << matrix.to_string();
 	return os;
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element> Matrix<Element>::transpose() const noexcept
 {
 	TableType ans_table(number_of_col, RowType(number_of_row));
@@ -331,7 +331,7 @@ Matrix<Element> Matrix<Element>::transpose() const noexcept
 	return Matrix<Element>(ans_table);
 }
 
-template <Elementable Element>
+template <IsMatrixableElement Element>
 Matrix<Element> Matrix<Element>::inverse() const
 {
 	if (number_of_row != number_of_col)
